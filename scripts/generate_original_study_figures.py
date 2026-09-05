@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 import warnings
 from pathlib import Path
 
@@ -32,6 +33,7 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 os.environ.setdefault(
     "MPLCONFIGDIR", str(_PROJECT_DIR_EARLY / "figures" / ".cache" / "matplotlib")
 )
+sys.path.insert(0, str(_PROJECT_DIR_EARLY))
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -45,15 +47,15 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, mean_absolute_error
 from sklearn.preprocessing import StandardScaler
 
-from evaluate_spatial_weather import (
+from weather_informed.evaluate import (
     CALENDAR_COLUMNS,
     SHARE_COL,
     WEATHER_COLUMNS,
     load_inputs,
     make_features,
 )
-from country_registry import COUNTRIES, EUROPE_CODES
-from poster_figure_style import apply_poster_style
+from weather_informed.regions import COUNTRIES, EUROPE_CODES
+from weather_informed.plotting_style import apply_poster_style
 
 
 SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))

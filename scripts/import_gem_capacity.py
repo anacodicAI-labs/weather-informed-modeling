@@ -31,13 +31,15 @@ from __future__ import annotations
 import argparse
 import os
 import shutil
+import sys
 from pathlib import Path
 from typing import Iterable
 
 import numpy as np
 import pandas as pd
 
-from country_registry import COUNTRIES
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from weather_informed.regions import COUNTRIES
 
 
 SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))

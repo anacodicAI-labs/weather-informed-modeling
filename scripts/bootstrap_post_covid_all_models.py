@@ -33,6 +33,7 @@ import argparse
 import hashlib
 import json
 import os
+import sys
 import time
 import traceback
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
@@ -45,8 +46,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, r2_score
 from sklearn.preprocessing import StandardScaler
 
-from country_registry import COUNTRIES, EUROPE_CODES
-from evaluate_spatial_weather import (
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from weather_informed.regions import COUNTRIES, EUROPE_CODES
+from weather_informed.evaluate import (
     CALENDAR_COLUMNS,
     SHARE_COL,
     WEATHER_COLUMNS,

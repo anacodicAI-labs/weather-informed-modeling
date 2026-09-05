@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import shutil
+import sys
 import time
 from datetime import date, timedelta
 from pathlib import Path
@@ -18,7 +19,8 @@ import numpy as np
 import pandas as pd
 import requests
 
-from country_registry import COUNTRIES, EUROPE_CODES
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from weather_informed.regions import COUNTRIES, EUROPE_CODES
 
 
 ROOT = Path(__file__).resolve().parent.parent

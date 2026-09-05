@@ -14,13 +14,15 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 import time
 from datetime import date, timedelta
 from pathlib import Path
 
 import pandas as pd
 
-from country_registry import BBOX
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from weather_informed.regions import BBOX
 
 
 SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))

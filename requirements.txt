@@ -1,0 +1,17 @@
+numpy               # arrays, everywhere
+pandas              # tabular data, everywhere
+xarray              # ERA5 NetCDF handling and resolution coarsening
+dask                # lazy arrays used by xarray during coarsening
+netCDF4             # xarray's NetCDF read/write engine
+zarr                # ARCO ERA5 Zarr store access (scripts/stage_era5_arco.py)
+geopandas           # country choropleth figure (scripts/generate_paper_placeholder_figures.py)
+pyogrio             # geopandas I/O backend; also supplies the bundled Natural Earth
+                    #   shapefile fixture used for the country map -- see the TODO in
+                    #   README.md about this being a fragile dependency on pyogrio's
+                    #   internal test fixtures
+scikit-learn        # RandomForest / logistic regression / HistGradientBoosting / metrics
+lightgbm            # optional secondary regressor; code already guards the import with
+                    #   try/except, so this is a soft dependency -- safe to omit
+matplotlib          # all figures
+requests            # Energy-Charts API client (scripts/fetch_era_energy_inputs.py)
+openpyxl            # reads the GEM Excel workbooks via pandas.read_excel

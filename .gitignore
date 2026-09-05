@@ -1,0 +1,19 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Fetched/generated data, results, and figures -- large and reproducible from
+# scripts/ given the raw inputs; see README.md for what's committed vs not.
+data/*
+results/*
+figures/*
+!data/.gitkeep
+!results/.gitkeep
+!figures/.gitkeep
+
+# OS
+.DS_Store

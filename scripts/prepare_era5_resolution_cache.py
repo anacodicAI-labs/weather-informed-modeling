@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -23,8 +24,9 @@ import pandas as pd
 import xarray as xr
 import dask
 
-import build_weighted_weather_local as builder
-from country_registry import EUROPE_CODES
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from weather_informed import weather_build as builder
+from weather_informed.regions import EUROPE_CODES
 
 
 SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))

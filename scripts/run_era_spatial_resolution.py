@@ -42,7 +42,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from country_registry import EUROPE_CODES
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from weather_informed.regions import EUROPE_CODES
 
 
 SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))

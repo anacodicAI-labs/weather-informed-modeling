@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import sys
 from pathlib import Path
 
 SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
@@ -13,12 +14,13 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 os.environ.setdefault(
     "MPLCONFIGDIR", str(PROJECT_DIR / "figures" / ".cache" / "matplotlib")
 )
+sys.path.insert(0, str(PROJECT_DIR))
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from poster_figure_style import apply_poster_style
+from weather_informed.plotting_style import apply_poster_style
 
 
 DEFAULT_INPUT = (

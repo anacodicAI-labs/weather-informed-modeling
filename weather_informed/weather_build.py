@@ -32,7 +32,16 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from country_registry import BBOX
+try:
+    from .regions import BBOX
+except ImportError:
+    # Allows `python weather_informed/weather_build.py ...` to work directly
+    # (relative imports fail when a module is run as __main__), in addition
+    # to the normal `from weather_informed import weather_build` usage.
+    import sys
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from weather_informed.regions import BBOX
 
 
 SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
