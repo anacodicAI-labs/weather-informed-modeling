@@ -4,6 +4,8 @@ xarray              # ERA5 NetCDF handling and resolution coarsening
 dask                # lazy arrays used by xarray during coarsening
 netCDF4             # xarray's NetCDF read/write engine
 zarr                # ARCO ERA5 Zarr store access (scripts/stage_era5_arco.py)
+cdsapi              # only for the CDS-queue staging route (scripts/stage_era5_cds.py);
+                    #   the ARCO route above is the default and does not need it
 geopandas           # country choropleth figure (scripts/generate_paper_placeholder_figures.py)
 pyogrio             # geopandas I/O backend; also supplies the bundled Natural Earth
                     #   shapefile fixture used for the country map -- see the TODO in

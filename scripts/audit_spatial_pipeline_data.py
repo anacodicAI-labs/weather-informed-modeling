@@ -11,14 +11,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import xarray as xr
 
-import build_weighted_weather_local as builder
-from country_registry import COUNTRIES, EUROPE_CODES
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from weather_informed import weather_build as builder
+from weather_informed.regions import COUNTRIES, EUROPE_CODES
 import run_era_spatial_resolution as runner
 
 

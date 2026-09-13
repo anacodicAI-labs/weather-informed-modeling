@@ -18,6 +18,7 @@ import argparse
 import fcntl
 import os
 import socket
+import sys
 import threading
 import time
 import traceback
@@ -27,9 +28,10 @@ from pathlib import Path
 
 import pandas as pd
 
-import build_weighted_weather_local as weather_builder
-import evaluate_spatial_weather as evaluator
-from country_registry import EUROPE_CODES
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from weather_informed import weather_build as weather_builder
+from weather_informed import evaluate as evaluator
+from weather_informed.regions import EUROPE_CODES
 
 
 SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))

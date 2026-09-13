@@ -4,7 +4,7 @@
 This is an orchestration layer around the project's validated spatial scripts;
 it does not reimplement weather coarsening or model evaluation.  It prepares
 the historical target files in the naming layout expected by
-``evaluate_spatial_weather.py``, builds year-specific GEM capacity maps, stages
+``weather_informed/evaluate.py``, builds year-specific GEM capacity maps, stages
 ERA5, materializes resolution-native caches, runs the ladder, and invokes the
 same summarizer used for the post-COVID experiment.
 

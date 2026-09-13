@@ -4,7 +4,7 @@
 Unlike ``stage_era5_cds.py``, this script does not submit queued CDS retrieval
 jobs.  It reads only the required cloud chunks and writes one resumable NetCDF
 file per country.  The output is compatible with
-``build_weighted_weather_local.py --era5-dir ...``.
+``weather_informed/weather_build.py --era5-dir ...``.
 
 The CDS personal-access token is read from ``CDSAPI_KEY`` or ``~/.cdsapirc``.
 """

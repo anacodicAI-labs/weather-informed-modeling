@@ -45,7 +45,7 @@ COUNTRIES = {
 # South, north, west, east. Domains intentionally include a small coastal
 # margin so offshore wind sites are not silently clipped. Spain and France use
 # their continental interconnected-system footprints; any GEM phases outside
-# those scopes are explicitly audited by build_weighted_weather_local.py.
+# those scopes are explicitly audited by weather_informed/weather_build.py.
 BBOX = {
     "at": (46.3, 49.1, 9.4, 17.2),
     "be": (49.5, 51.5, 2.5, 6.4),
