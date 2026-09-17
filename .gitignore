@@ -15,5 +15,12 @@ figures/*
 !results/.gitkeep
 !figures/.gitkeep
 
+# Committed on purpose: the curated outputs the paper's tables and figures
+# are built from. Everything else under results/ and figures/ stays ignored.
+!results/paper/
+!results/paper/**
+!figures/paper/
+!figures/paper/**
+
 # OS
 .DS_Store

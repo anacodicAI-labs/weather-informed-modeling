@@ -32,6 +32,7 @@ weather-informed-modeling/
 │   ├── bootstrap_core.py                 # legacy refit-based bootstrap, SGE-cluster array job
 │   ├── summarize_spatial_resolution.py   # aggregates run outputs into summary tables + 1 figure
 │   ├── plot_post_covid_bootstrap.py      # 2x2 bootstrap CI figure
+│   ├── plot_era_spatial_resolution_results.py # era-comparison figure suite + figure_statistics.csv
 │   ├── generate_original_study_figures.py    # main 16-figure diagnostic suite
 │   └── generate_paper_placeholder_figures.py # the 7 figures assembled for the paper itself
 ├── notebooks/                 # narrative, teaching-annotated walkthroughs of the pipeline
@@ -41,8 +42,11 @@ weather-informed-modeling/
 │   ├── 04_resolution_and_capacity_sensitivity.ipynb
 │   └── 05_figures_and_bootstrap_ci.ipynb
 ├── data/                       # inputs and intermediate files (gitignored; see below)
-├── results/                    # output CSVs/JSON (gitignored; see below)
-├── figures/                    # output PNGs/PDFs (gitignored; see below)
+├── results/                    # run outputs (gitignored) except:
+│   └── paper/                  #   the curated tables the paper's numbers come from
+├── figures/                    # run outputs (gitignored) except:
+│   └── paper/                  #   the three figures in the Results section
+├── CITATION.cff
 ├── requirements.txt
 └── .env.example
 ```
@@ -63,17 +67,42 @@ cp .env.example .env   # fill in CDSAPI_KEY, or use ~/.cdsapirc instead
 | `stage_era5_arco.py` (ERA5) | Yes -- `CDSAPI_KEY` (Copernicus CDS) |
 | everything downstream of the above three | No -- reads local files only |
 
-## Known gaps (as of 2026-08-31)
+## Committed outputs
 
-`run_era_spatial_resolution.py` and `bootstrap_core.py` reference three scripts that were not yet
-included in this repo: `audit_spatial_pipeline_data.py`, `run_spatial_resolution_ladder.py`,
-`compare_era_spatial_resolution.py`, and `build_manifest.py`. Those orchestration steps will fail
-until those files are added. `stage_era5_cds.py` (a CDS-queue alternative to the ARCO staging script)
-is also referenced in docstrings but not present.
+`results/paper/` and `figures/paper/` hold the artifacts the paper's Results section is
+built from, so the reported numbers can be checked without re-running the pipeline (which
+needs ~20 GB of ERA5 and a Copernicus key). Absolute paths in provenance columns have been
+rewritten as repo-relative.
+
+| File | Backs |
+|---|---|
+| `model_results_all_eras.csv` | per-country scores and weather-added gain, all eras x tasks x models x resolutions x schemes |
+| `resolution_summary_all_eras.csv` | predictive drift and grid-point-hour workload per resolution |
+| `figure_statistics.csv` | Wilcoxon p-values for the pre/post comparison |
+| `capacity_weighted_primary_results_table.csv` | headline capacity-weighted summary per era |
+| `block_bootstrap_correlations.csv` | block-bootstrap CIs on the wind-dominance correlation, with and without Lithuania |
+| `country_size_sensitivity_post.csv` | partial correlations controlling for log grid-cell count |
+| `headline_correlations.csv`, `leave_one_country_out_correlations.csv` | correlation and its leave-one-country-out range |
+| `country_summary_pre.csv`, `country_summary_post.csv` | per-country wind and solar shares of load |
+
+| Figure | Shows |
+|---|---|
+| `fig_results_percountry` | per-country calendar vs. calendar+weather, both eras |
+| `fig_results_winddominance` | wind dominance vs. weather-added gain, post-COVID |
+| `fig_results_drift_workload` | predictive drift against workload reduction |
+
+Everything else under `results/` and `figures/` remains gitignored.
+
+## Citing this work
+
+See `CITATION.cff`. GitHub renders it as a "Cite this repository" button; `cffconvert` will
+turn it into BibTeX. The preferred citation is the paper, not the repo.
+
+## Known gaps
 
 `prepare_capacity_points.py` is legacy and does not import `weather_informed.regions` -- it has its
 own smaller, duplicated bounding-box dict. It has been superseded by `import_gem_capacity.py` for the
 current pipeline; kept for reference only.
 
-No committed data, results, or notebooks-with-output exist yet -- `data/`, `results/`, and `figures/`
-are empty (gitignored) until the pipeline is actually run against real credentials/downloads.
+The repo has no `LICENSE` file, so reuse terms are currently undefined. `CITATION.cff`
+deliberately omits a `license:` field until one is chosen.

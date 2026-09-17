@@ -11,6 +11,7 @@ pyogrio             # geopandas I/O backend; also supplies the bundled Natural E
                     #   shapefile fixture used for the country map -- see the TODO in
                     #   README.md about this being a fragile dependency on pyogrio's
                     #   internal test fixtures
+scipy               # Wilcoxon signed-rank test (scripts/plot_era_spatial_resolution_results.py)
 scikit-learn        # RandomForest / logistic regression / HistGradientBoosting / metrics
 lightgbm            # optional secondary regressor; code already guards the import with
                     #   try/except, so this is a soft dependency -- safe to omit

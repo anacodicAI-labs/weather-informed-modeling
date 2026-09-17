@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite the paper below."
+title: "weather-informed-modeling: code for Weather-Informed Modeling of Renewable Electricity Share in Europe"
+abstract: >-
+  Pipeline and analysis code for quantifying how much ERA5 weather adds to
+  calendar-only models of hourly renewable generation as a share of national
+  electricity load across 19 European countries, comparing capacity-weighted
+  against uniform spatial aggregation at grid resolutions from 0.25 to 2 degrees.
+type: software
+repository-code: "https://github.com/anacodicAI-labs/weather-informed-modeling"
+keywords:
+  - carbon neutrality
+  - renewable electricity
+  - weather-informed modeling
+  - renewable energy mix
+  - spatial resolution
+  - capacity weighting
+  - ERA5
+  - European power systems
+authors:
+  - family-names: Wang
+    given-names: Aiden
+    affiliation: "BU Rise Lab, Boston University, Boston, MA 02215, USA"
+  - family-names: Kaur
+    given-names: Rashanjot
+    affiliation: "MET Department of Computer Science, Boston University, Boston, MA 02215, USA"
+    email: rashan@bu.edu
+  - family-names: Pinsky
+    given-names: Eugene
+    affiliation: "MET Department of Computer Science, Boston University, Boston, MA 02215, USA"
+preferred-citation:
+  type: article
+  title: "Weather-Informed Modeling of Renewable Electricity Share in Europe: Effects of Renewable Mix and Spatial Resolution"
+  journal: Forecasting
+  year: 2026
+  authors:
+    - family-names: Wang
+      given-names: Aiden
+      affiliation: "BU Rise Lab, Boston University, Boston, MA 02215, USA"
+    - family-names: Kaur
+      given-names: Rashanjot
+      affiliation: "MET Department of Computer Science, Boston University, Boston, MA 02215, USA"
+      email: rashan@bu.edu
+    - family-names: Pinsky
+      given-names: Eugene
+      affiliation: "MET Department of Computer Science, Boston University, Boston, MA 02215, USA"

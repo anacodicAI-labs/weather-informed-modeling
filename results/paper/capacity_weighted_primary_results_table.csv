@@ -1,0 +1,25 @@
+Era,Analysis,Resolution (deg),Countries with gain,Countries in correlation,Median absolute gain drift,Maximum absolute gain drift,Gain vs. wind-minus-solar r
+Pre-COVID (2016-2019),Gradient Boosting regression,0.25,19,16,0.0,0.0,0.554519
+Pre-COVID (2016-2019),Gradient Boosting regression,0.5,19,16,0.003088,0.041088,0.563196
+Pre-COVID (2016-2019),Gradient Boosting regression,1.0,19,16,0.003644,0.088748,0.549898
+Pre-COVID (2016-2019),Gradient Boosting regression,2.0,19,16,0.01279,0.10651,0.519262
+COVID (2020-2021),Gradient Boosting regression,0.25,19,16,0.0,0.0,0.596616
+COVID (2020-2021),Gradient Boosting regression,0.5,19,16,0.003592,0.056673,0.593546
+COVID (2020-2021),Gradient Boosting regression,1.0,19,16,0.009591,0.102227,0.582097
+COVID (2020-2021),Gradient Boosting regression,2.0,19,16,0.013011,0.078523,0.574363
+Post-COVID (2022-Apr 2026),Gradient Boosting regression,0.25,19,17,0.0,0.0,0.814444
+Post-COVID (2022-Apr 2026),Gradient Boosting regression,0.5,19,17,0.002177,0.024866,0.814747
+Post-COVID (2022-Apr 2026),Gradient Boosting regression,1.0,19,17,0.005337,0.072739,0.812647
+Post-COVID (2022-Apr 2026),Gradient Boosting regression,2.0,19,17,0.013486,0.113287,0.797492
+Pre-COVID (2016-2019),Random Forest classification,0.25,19,10,0.0,0.0,0.724237
+Pre-COVID (2016-2019),Random Forest classification,0.5,19,10,0.00208,0.006316,0.714737
+Pre-COVID (2016-2019),Random Forest classification,1.0,19,10,0.005748,0.09601,0.705303
+Pre-COVID (2016-2019),Random Forest classification,2.0,19,10,0.003617,0.026971,0.67501
+COVID (2020-2021),Random Forest classification,0.25,19,11,0.0,0.0,0.450503
+COVID (2020-2021),Random Forest classification,0.5,19,11,0.001462,0.010588,0.447818
+COVID (2020-2021),Random Forest classification,1.0,19,11,0.003568,0.02396,0.433917
+COVID (2020-2021),Random Forest classification,2.0,19,11,0.003253,0.020332,0.439744
+Post-COVID (2022-Apr 2026),Random Forest classification,0.25,19,17,0.0,0.0,0.880774
+Post-COVID (2022-Apr 2026),Random Forest classification,0.5,19,17,0.001005,0.008576,0.880713
+Post-COVID (2022-Apr 2026),Random Forest classification,1.0,19,17,0.003696,0.023783,0.875404
+Post-COVID (2022-Apr 2026),Random Forest classification,2.0,19,17,0.008434,0.166821,0.80283
