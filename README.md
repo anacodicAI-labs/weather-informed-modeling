@@ -104,5 +104,6 @@ turn it into BibTeX. The preferred citation is the paper, not the repo.
 own smaller, duplicated bounding-box dict. It has been superseded by `import_gem_capacity.py` for the
 current pipeline; kept for reference only.
 
-The repo has no `LICENSE` file, so reuse terms are currently undefined. `CITATION.cff`
-deliberately omits a `license:` field until one is chosen.
+## License
+
+MIT, see `LICENSE`. The same terms are recorded in `CITATION.cff`.

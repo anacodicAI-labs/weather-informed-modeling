@@ -7,6 +7,7 @@ abstract: >-
   electricity load across 19 European countries, comparing capacity-weighted
   against uniform spatial aggregation at grid resolutions from 0.25 to 2 degrees.
 type: software
+license: MIT
 repository-code: "https://github.com/anacodicAI-labs/weather-informed-modeling"
 keywords:
   - carbon neutrality
@@ -20,13 +21,16 @@ keywords:
 authors:
   - family-names: Wang
     given-names: Aiden
+    orcid: "https://orcid.org/0009-0004-2644-0933"
     affiliation: "BU Rise Lab, Boston University, Boston, MA 02215, USA"
   - family-names: Kaur
     given-names: Rashanjot
+    orcid: "https://orcid.org/0009-0001-4572-9968"
     affiliation: "MET Department of Computer Science, Boston University, Boston, MA 02215, USA"
     email: rashan@bu.edu
   - family-names: Pinsky
     given-names: Eugene
+    orcid: "https://orcid.org/0000-0002-3836-1851"
     affiliation: "MET Department of Computer Science, Boston University, Boston, MA 02215, USA"
 preferred-citation:
   type: article
@@ -36,11 +40,14 @@ preferred-citation:
   authors:
     - family-names: Wang
       given-names: Aiden
+      orcid: "https://orcid.org/0009-0004-2644-0933"
       affiliation: "BU Rise Lab, Boston University, Boston, MA 02215, USA"
     - family-names: Kaur
       given-names: Rashanjot
+      orcid: "https://orcid.org/0009-0001-4572-9968"
       affiliation: "MET Department of Computer Science, Boston University, Boston, MA 02215, USA"
       email: rashan@bu.edu
     - family-names: Pinsky
       given-names: Eugene
+      orcid: "https://orcid.org/0000-0002-3836-1851"
       affiliation: "MET Department of Computer Science, Boston University, Boston, MA 02215, USA"
