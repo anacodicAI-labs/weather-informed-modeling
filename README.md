@@ -1,109 +1,131 @@
 # weather-informed-modeling
 
-Code for "Weather-Informed Modeling of Renewable Electricity Share in Europe: Effects of Renewable
-Mix and Spatial Resolution." Random Forest and gradient-boosting models predict hourly renewable
-generation as a share of electricity load in 19 European countries, isolating the added predictive
-value of ERA5 weather beyond calendar patterns, and comparing installed-capacity-weighted vs. uniform
-weather aggregation across four spatial resolutions.
+How much does weather data actually improve a model of renewable electricity supply — and how much
+of that data do you really need?
 
-The paper itself lives in a separate, private planning repo (`my-local/weather-informed-modeling/`),
-not here — this repo is the public, citable code artifact referenced by the paper's Data Availability
-statement.
+This repository contains the full analysis for **"Weather-Informed Modeling of Renewable Electricity
+Share in Europe: Effects of Renewable Mix and Spatial Resolution."** It predicts hourly renewable
+generation as a share of national electricity demand across 19 European power systems, measures what
+ERA5 weather adds over a calendar-only baseline, and tests two design choices: how weather is
+averaged across a country, and how finely it is resolved.
 
-## Layout
+## What the analysis found
 
-```
-weather-informed-modeling/
-├── weather_informed/         # shared library code, imported by scripts/ below
-│   ├── regions.py             # country codes, names, bounding boxes
-│   ├── weather_build.py       # ERA5 coarsening + capacity-weighted/uniform aggregation
-│   ├── evaluate.py            # calendar-only vs. calendar+weather model fitting and gain
-│   └── plotting_style.py      # shared matplotlib rcParams
-├── scripts/                   # standalone, single-purpose pipeline steps (run in the order below)
-│   ├── fetch_era_energy_inputs.py        # Energy-Charts API -> hourly load/renewable-share targets
-│   ├── import_gem_capacity.py            # GEM wind/solar Excel trackers -> annual capacity maps
-│   ├── stage_era5_arco.py                # ERA5 (ARCO/Zarr) -> per-country native-grid NetCDF
-│   ├── prepare_era5_resolution_cache.py  # coarsens staged ERA5 to 0.25/0.5/1/2 degree caches
-│   ├── prepare_capacity_points.py        # LEGACY precursor to import_gem_capacity.py; kept for
-│   │                                      #   reference, not part of the current pipeline
-│   ├── run_era_spatial_resolution.py     # orchestrates the steps above across eras (see below)
-│   ├── bootstrap_post_covid_all_models.py  # current block-bootstrap CI script (cheap, no refit),
-│   │                                        #   uses weather_informed.evaluate for model fitting
-│   ├── bootstrap_core.py                 # legacy refit-based bootstrap, SGE-cluster array job
-│   ├── summarize_spatial_resolution.py   # aggregates run outputs into summary tables + 1 figure
-│   ├── plot_post_covid_bootstrap.py      # 2x2 bootstrap CI figure
-│   ├── plot_era_spatial_resolution_results.py # era-comparison figure suite + figure_statistics.csv
-│   ├── generate_original_study_figures.py    # main 16-figure diagnostic suite
-│   └── generate_paper_placeholder_figures.py # the 7 figures assembled for the paper itself
-├── notebooks/                 # narrative, teaching-annotated walkthroughs of the pipeline
-│   ├── 01_fetch_energy_and_capacity_data.ipynb
-│   ├── 02_stage_and_aggregate_weather.ipynb
-│   ├── 03_evaluate_calendar_vs_weather_models.ipynb
-│   ├── 04_resolution_and_capacity_sensitivity.ipynb
-│   └── 05_figures_and_bootstrap_ci.ipynb
-├── data/                       # inputs and intermediate files (gitignored; see below)
-├── results/                    # run outputs (gitignored) except:
-│   └── paper/                  #   the curated tables the paper's numbers come from
-├── figures/                    # run outputs (gitignored) except:
-│   └── paper/                  #   the three figures in the Results section
-├── CITATION.cff
-├── requirements.txt
-└── .env.example
-```
-
-## Setup
-
-```bash
-pip install -r requirements.txt
-cp .env.example .env   # fill in CDSAPI_KEY, or use ~/.cdsapirc instead
-```
-
-## What runs offline vs. needs a key
-
-| Step | Needs a key? |
+| | |
 |---|---|
-| `fetch_era_energy_inputs.py` (Energy-Charts) | No -- public API, no key |
-| `import_gem_capacity.py` (GEM trackers) | No -- but you must manually download the GEM Excel workbooks first (not redistributed here); see the script's docstring for the expected filenames under `data/raw/gem/` |
-| `stage_era5_arco.py` (ERA5) | Yes -- `CDSAPI_KEY` (Copernicus CDS) |
-| everything downstream of the above three | No -- reads local files only |
+| Weather more than doubles explained variance | median R² 0.10 → 0.56 (pre-COVID), 0.23 → 0.63 (post-COVID) |
+| It helps almost everywhere | 15 of 19 countries pre-COVID, 16 of 19 post-COVID |
+| The benefit concentrates in wind-led systems | r = 0.88 between wind dominance and weather gain |
+| Where capacity sits beats how finely weather is resolved | capacity weighting wins 55/64 and 65/76 comparisons; a 1° grid drops 93% of the data for 0.005 drift |
 
-## Committed outputs
+The practical consequence: coarsen the weather grid, and spend the effort on locating capacity
+accurately instead.
 
-`results/paper/` and `figures/paper/` hold the artifacts the paper's Results section is
-built from, so the reported numbers can be checked without re-running the pipeline (which
-needs ~20 GB of ERA5 and a Copernicus key). Absolute paths in provenance columns have been
-rewritten as repo-relative.
+## Start here
 
-| File | Backs |
+Read the notebooks in order. They narrate the pipeline stage by stage and explain why each step
+exists, with no credentials required to follow along.
+
+| Notebook | Covers |
 |---|---|
-| `model_results_all_eras.csv` | per-country scores and weather-added gain, all eras x tasks x models x resolutions x schemes |
-| `resolution_summary_all_eras.csv` | predictive drift and grid-point-hour workload per resolution |
-| `figure_statistics.csv` | Wilcoxon p-values for the pre/post comparison |
-| `capacity_weighted_primary_results_table.csv` | headline capacity-weighted summary per era |
-| `block_bootstrap_correlations.csv` | block-bootstrap CIs on the wind-dominance correlation, with and without Lithuania |
-| `country_size_sensitivity_post.csv` | partial correlations controlling for log grid-cell count |
-| `headline_correlations.csv`, `leave_one_country_out_correlations.csv` | correlation and its leave-one-country-out range |
+| `01_fetch_energy_and_capacity_data.ipynb` | where the electricity and power-plant data come from |
+| `02_stage_and_aggregate_weather.ipynb` | ERA5 staging, coarsening, capacity-weighted aggregation |
+| `03_evaluate_calendar_vs_weather_models.ipynb` | the calendar-vs-weather comparison |
+| `04_resolution_and_capacity_sensitivity.ipynb` | the resolution and weighting experiments |
+| `05_figures_and_bootstrap_ci.ipynb` | figures and uncertainty intervals |
+
+## Checking the reported numbers
+
+Every number and figure in the paper comes from a committed file — you do not need to re-run the
+pipeline (which needs a Copernicus key and roughly 20 GB of ERA5) to verify them.
+
+**`results/paper/`**
+
+| File | What it backs |
+|---|---|
+| `model_results_all_eras.csv` | per-country scores and weather-added gain, across every era, task, model, resolution and weighting scheme. This is the master table. |
+| `capacity_weighted_primary_results_table.csv` | the headline capacity-weighted summary per era |
+| `resolution_summary_all_eras.csv` | predictive drift and grid-point-hour workload at each resolution |
+| `headline_correlations.csv` | wind dominance vs. weather-added gain, per model |
+| `leave_one_country_out_correlations.csv` | how much that correlation moves when each country is dropped |
+| `country_size_sensitivity_post.csv` | the same correlation after controlling for country domain size |
+| `figure_statistics.csv` | Wilcoxon results for the pre/post-COVID comparison |
+| `block_bootstrap_correlations.csv` | bootstrap confidence intervals on the correlation |
 | `country_summary_pre.csv`, `country_summary_post.csv` | per-country wind and solar shares of load |
+
+**`figures/paper/`** — PDF and PNG of each
 
 | Figure | Shows |
 |---|---|
-| `fig_results_percountry` | per-country calendar vs. calendar+weather, both eras |
-| `fig_results_winddominance` | wind dominance vs. weather-added gain, post-COVID |
-| `fig_results_drift_workload` | predictive drift against workload reduction |
+| `fig_results_percountry` | calendar vs. calendar-plus-weather, every country, both eras |
+| `fig_results_winddominance` | wind dominance against weather-added gain |
+| `fig_results_drift_workload` | accuracy drift against the data volume saved by coarsening |
 
-Everything else under `results/` and `figures/` remains gitignored.
+## Running it yourself
 
-## Citing this work
+```bash
+pip install -r requirements.txt
+cp .env.example .env          # add CDSAPI_KEY, or use ~/.cdsapirc
+```
 
-See `CITATION.cff`. GitHub renders it as a "Cite this repository" button; `cffconvert` will
-turn it into BibTeX. The preferred citation is the paper, not the repo.
+`run_era_spatial_resolution.py` orchestrates the whole pipeline and is resumable — re-running skips
+work already on disk. Start with `--dry-run` to see the commands, then one country before all 19:
 
-## Known gaps
+```bash
+python scripts/run_era_spatial_resolution.py --eras pre post --dry-run
+python scripts/run_era_spatial_resolution.py --eras pre post --codes dk
+```
 
-`prepare_capacity_points.py` is legacy and does not import `weather_informed.regions` -- it has its
-own smaller, duplicated bounding-box dict. It has been superseded by `import_gem_capacity.py` for the
-current pipeline; kept for reference only.
+Only one step needs a credential:
+
+| Step | Credential |
+|---|---|
+| Energy-Charts download | none — public API |
+| GEM capacity trackers | none, but download the Excel workbooks manually into `data/raw/gem/` (not redistributed here) |
+| ERA5 staging | `CDSAPI_KEY` from Copernicus |
+| everything downstream | none — reads local files |
+
+## Code layout
+
+```
+weather_informed/            importable library, shared by every script
+  regions.py                 country codes, names, bounding boxes
+  weather_build.py           ERA5 coarsening and capacity-weighted aggregation
+  evaluate.py                the model-fitting protocol and weather-added gain
+  plotting_style.py          shared figure styling
+
+scripts/
+  fetch_era_energy_inputs.py          Energy-Charts -> hourly load and renewable share
+  import_gem_capacity.py              GEM trackers -> annual capacity maps per country
+  stage_era5_arco.py                  ERA5 via the ARCO/Zarr store (default route)
+  stage_era5_cds.py                   ERA5 via queued CDS requests (alternative route)
+  prepare_era5_resolution_cache.py    coarsen to 0.5/1/2 degrees, cached once
+  prepare_capacity_points.py          builds capacity maps from a plant CSV instead of GEM
+
+  run_era_spatial_resolution.py       orchestrates everything below, across eras
+  audit_spatial_pipeline_data.py      verifies a country-era is complete before running
+  run_spatial_resolution_ladder.py    every resolution x scheme combination, in parallel
+  compare_era_spatial_resolution.py   compares eras, writes the comparison tables
+  summarize_spatial_resolution.py     aggregates runs into the summary tables
+
+  bootstrap_post_covid_all_models.py  block-bootstrap confidence intervals
+  bootstrap_core.py                   refit-based bootstrap, for SGE cluster array jobs
+  build_manifest.py                   task manifest consumed by bootstrap_core.py
+
+  plot_era_spatial_resolution_results.py   era-comparison figure suite
+  plot_post_covid_bootstrap.py             bootstrap interval figure
+  generate_original_study_figures.py       16-figure diagnostic suite
+  generate_paper_placeholder_figures.py    the figures used in the paper
+```
+
+`data/`, and everything in `results/` and `figures/` other than the `paper/` subfolders, are
+generated locally and not tracked.
+
+## Citing
+
+See `CITATION.cff` — GitHub renders it as a "Cite this repository" button, and `cffconvert` turns it
+into BibTeX. Please cite the paper rather than the repository.
 
 ## License
 
-MIT, see `LICENSE`. The same terms are recorded in `CITATION.cff`.
+MIT, see `LICENSE`.
