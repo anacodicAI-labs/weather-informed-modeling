@@ -84,7 +84,7 @@ At 0.25° with capacity weighting, medians across countries:
 <p align="center"><img src="figures/paper/fig_results_percountry.png" width="760" alt="Per-country calendar vs calendar-plus-weather"></p>
 <p align="center"><em>Per-country test performance at 0.25° with capacity weighting. Grey is the calendar-only baseline, teal adds weather. AUC above, R² below; countries ordered by calendar-plus-weather score.</em></p>
 
-### The gain concentrates in wind-dominant systems
+### The gain tracks wind dominance
 
 Post-COVID, weather-added gain tracks wind dominance across countries — and the relationship is not a proxy for how much weather data a large country contributes.
 
@@ -117,12 +117,14 @@ Against a post-COVID median gain of 0.112 AUC and 0.319 R², a 1° drift of 0.00
 
 ### Capacity weighting beats uniform averaging
 
-Pooling both eras and all models, matched by country, era, task, and model at 0.25°:
+Primary models at 0.25°, one paired comparison per country, tested separately in each era:
 
-| Task | *n* | Mean paired difference | Capacity wins | Wilcoxon *p* |
-|---|---:|---:|---:|---:|
-| Classification | 64 | +0.017 AUC | **55/64** | 1.1 × 10⁻⁹ |
-| Regression | 76 | +0.046 R² | **65/76** | 4.3 × 10⁻¹⁰ |
+| Era | Model | Mean paired difference | Capacity wins | Wilcoxon *p* |
+|---|---|---:|---:|---:|
+| Pre-COVID | Random Forest | +0.025 AUC | **13/13** | 0.0002 |
+| Pre-COVID | Gradient Boosting | +0.051 R² | **15/19** | 0.0008 |
+| Post-COVID | Random Forest | +0.017 AUC | **15/19** | 0.0003 |
+| Post-COVID | Gradient Boosting | +0.043 R² | **18/19** | 0.0001 |
 
 ---
 
@@ -146,6 +148,36 @@ python scripts/compare_era_spatial_resolution.py
 ```
 
 Every number and figure in the paper is reproduced by the tables already committed under `results/paper/`, so the claims can be checked without re-running the pipeline — which needs roughly 20 GB of ERA5 and a Copernicus token.
+
+### Figures and peer-review analyses
+
+```bash
+# Paper figures 2-4, from results/paper/ alone
+python scripts/make_forecasting_paper_figures.py
+
+# Statistics added in review, from results/paper/ alone
+# (per-era capacity tests, matched-country era comparison, Fisher intervals,
+#  0.25 vs 1 degree table, test-window lengths, unknown-start check for all 19)
+python scripts/reviewer_statistics.py
+python scripts/reviewer_statistics.py --data-root data   # also counts retired GEM capacity
+
+# These two need the pipeline's data/ directory
+python scripts/reviewer_decomposition.py      # demand vs generation; interconnection proxy
+python scripts/reviewer_solar_alignment.py    # effect of the one-hour ERA5 radiation offset
+```
+
+The unknown-start check for the six countries added after the original 13 (`results/paper/unknown_start_expansion_model_results.csv`) was produced with the pipeline's own scripts, writing to separate directories:
+
+```bash
+python scripts/import_gem_capacity.py --codes at cz de es fr ro --years 2022 2023 2024 2025 2026 \
+    --unknown-start-policy exclude --out-dir data/capacity_weights_unknown_start_excluded_expansion
+python scripts/run_spatial_resolution_ladder.py --codes de es fr ro at cz --resolutions 1.0 \
+    --schemes capacity --start 2022-01-01 --end 2026-04-30 --split 0.8 \
+    --capacity-dir data/capacity_weights_unknown_start_excluded_expansion \
+    --weather-out-dir data/sensitivity_unknown_exclude_expansion_weather \
+    --resolution-cache-dir data/era5_coarse_post_covid --data-dir data/energy_targets_by_era/post \
+    --era5-dir data/era5_native_0p25deg --results-dir results/sensitivity_unknown_exclude_expansion
+```
 
 ---
 

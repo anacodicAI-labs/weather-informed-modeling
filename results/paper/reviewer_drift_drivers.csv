@@ -1,0 +1,7 @@
+era,resolution_deg,max_drift,code,model
+pre,0.5,0.04108777342284009,lv,GradientBoosting
+pre,1.0,0.12077312395605971,hr,LightGBM
+pre,2.0,0.10651037072436331,hr,GradientBoosting
+post,0.5,0.024865859377749683,ro,GradientBoosting
+post,1.0,0.0790863646300326,hr,LightGBM
+post,2.0,0.1668206820682066,sk,RandForest
