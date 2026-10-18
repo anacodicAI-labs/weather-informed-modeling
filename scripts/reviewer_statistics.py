@@ -209,16 +209,38 @@ def unknown_start(m):
     j = ex.set_index(k).gain.rename("gain_exclude").to_frame().join(
         inc.set_index(k).gain.rename("gain_include")).dropna().reset_index()
     j["abs_gain_delta"] = (j.gain_exclude - j.gain_include).abs()
-    j["batch"] = "added six"
-    o = orig[k + ["abs_gain_delta"]].assign(batch="original 13")
+    j["batch"] = "second batch (6)"
+    o = orig[k + ["abs_gain_delta"]].assign(batch="first batch (13)")
     t = pd.concat([o, j[k + ["abs_gain_delta", "batch"]]], ignore_index=True)
     t.to_csv(RES / "reviewer_unknown_start_all19.csv", index=False)
-    six = t[t.batch == "added six"]
+    six = t[t.batch == "second batch (6)"]
     worst = six.loc[six.abs_gain_delta.idxmax()]
     print("\n== unknown-start sensitivity, all 19 countries at 1 degree ==")
     print(f"  {len(t)} comparisons ({t.code.nunique()} countries): median {t.abs_gain_delta.median():.5f}, "
-          f"max {t.abs_gain_delta.max():.4f}; added six max {worst.abs_gain_delta:.4f} "
+          f"max {t.abs_gain_delta.max():.4f}; second batch max {worst.abs_gain_delta:.4f} "
           f"({worst.code.upper()} {worst.model})")
+
+
+def without_croatia(m):
+    """Croatia's pre-COVID series covers 2019 only; the era comparisons without it."""
+    w, sp = wind_dominance("pre"); wq, sq = wind_dominance("post")
+    Dpre, Dpost = (w - sp).rename("dp"), (wq - sq).rename("dq")
+    rng = np.random.default_rng(42)
+    print("\n== era comparisons with Croatia omitted ==")
+    for task, model in PRIMARY.items():
+        g = pd.concat([gains(m, "pre", task, model).rename("gp"),
+                       gains(m, "post", task, model).rename("gq")], axis=1).dropna().drop("hr")
+        p = wilcoxon(g.gq - g.gp).pvalue
+        t = g.join(Dpre).join(Dpost).dropna().sort_index()
+        diffs = []
+        for _ in range(5000):
+            s_ = t.iloc[rng.integers(0, len(t), len(t))]
+            if s_.dp.std() == 0 or s_.gp.std() == 0:
+                continue
+            diffs.append(np.corrcoef(s_.dq, s_.gq)[0, 1] - np.corrcoef(s_.dp, s_.gp)[0, 1])
+        lo, hi = np.percentile(diffs, [2.5, 97.5])
+        print(f"  {model:17s} paired Wilcoxon p={p:.3f}; matched r {np.corrcoef(t.dp, t.gp)[0,1]:.3f}"
+              f" -> {np.corrcoef(t.dq, t.gq)[0,1]:.3f} (n={len(t)}), increase 95% [{lo:+.3f}, {hi:+.3f}]")
 
 
 def lithuania_and_exceptions(m):
@@ -283,4 +305,5 @@ if __name__ == "__main__":
     distributed_solar()
     unknown_start(m)
     lithuania_and_exceptions(m)
+    without_croatia(m)
     retired_capacity(args.data_root)

@@ -40,5 +40,18 @@ for f in sorted(glob.glob(f"{ROOT}/energy_targets_by_era/post/weather_energy_mer
         out[f"{tag}_gain"]=out[f"{tag}_wx"]-out[f"{tag}_cal"]
     rows.append(out); print(f"  {c}: gain {out['orig_gain']:+.3f} -> {out['fixed_gain']:+.3f}",flush=True)
 t=pd.DataFrame(rows); t.to_csv(ARGS.out,index=False)
+
+# Diagnostic: correlation of observed solar generation with radiation as used and
+# shifted by one hour, for every country that reports a solar series.
+diag=[]
+for f in sorted(glob.glob(f"{ROOT}/energy_targets_by_era/post/weather_energy_merged_*.csv")):
+    c=os.path.basename(f)[-6:-4]
+    e=pd.read_csv(f,parse_dates=["timestamp"]).set_index("timestamp")
+    if "Solar" not in e or e.Solar.fillna(0).abs().sum()==0: continue
+    w=pd.read_csv(f"{ROOT}/country_weather_post_covid/weather_era5_{c}_capacity_0p25deg.csv",parse_dates=["timestamp"]).set_index("timestamp")
+    r={k:np.corrcoef(*pd.concat([e.Solar,w.shortwave_radiation.shift(k)],axis=1).dropna().values.T)[0,1] for k in (-1,0,1)}
+    diag.append({"code":c,"r_as_used":r[0],"r_shifted_one_hour":r[-1],"best_shift":max(r,key=r.get)})
+d=pd.DataFrame(diag); d.to_csv(str(ARGS.out).replace(".csv","_diagnostic.csv"),index=False)
+print(f"solar series in {len(d)} countries; one-hour shift aligns best in {int((d.best_shift==-1).sum())}")
 print("\nmedian gain  orig %.3f  fixed %.3f" % (t.orig_gain.median(), t.fixed_gain.median()))
 print("median +wx R2 orig %.3f  fixed %.3f" % (t.orig_wx.median(), t.fixed_wx.median()))

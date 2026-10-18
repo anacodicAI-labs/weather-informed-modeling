@@ -110,7 +110,7 @@ Post-COVID, relative to the 0.25° capacity-weighted reference:
 | 1° | 34,832,592 | **93.0%** | **0.0045** | 0.0791 |
 | 2° | 10,093,104 | 98.0% | 0.0110 | 0.1668 |
 
-Against a post-COVID median gain of 0.112 AUC and 0.319 R², a 1° drift of 0.0045 is roughly **4%** and **1.4%** of the effect being measured. Maximum drift exceeds median drift by an order of magnitude at every resolution, so a minority of systems are genuinely sensitive to coarsening even where the typical system is not.
+These medians pool all four models. For the primary models, the post-COVID median 1° drift is 0.0037 AUC and 0.0053 R² — roughly **3%** and **2%** of the median gains of 0.112 AUC and 0.319 R². Maximum drift exceeds median drift by an order of magnitude at every resolution, so a minority of systems are genuinely sensitive to coarsening even where the typical system is not.
 
 <p align="center"><img src="figures/paper/fig_results_drift_workload.png" width="620" alt="Predictive drift against workload reduction"></p>
 <p align="center"><em>Median predictive drift against spatial workload reduction. Points labelled by resolution.</em></p>
@@ -166,7 +166,7 @@ python scripts/reviewer_decomposition.py      # demand vs generation; interconne
 python scripts/reviewer_solar_alignment.py    # effect of the one-hour ERA5 radiation offset
 ```
 
-The unknown-start check for the six countries added after the original 13 (`results/paper/unknown_start_expansion_model_results.csv`) was produced with the pipeline's own scripts, writing to separate directories:
+The second batch of the unknown-start check (six countries; `results/paper/unknown_start_expansion_model_results.csv`) was produced with the pipeline's own scripts, writing to separate directories:
 
 ```bash
 python scripts/import_gem_capacity.py --codes at cz de es fr ro --years 2022 2023 2024 2025 2026 \

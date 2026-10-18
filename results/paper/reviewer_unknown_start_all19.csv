@@ -1,77 +1,77 @@
 code,task,model,abs_gain_delta,batch
-dk,classification,LogReg,0.000122141612884,original 13
-hr,classification,LogReg,0.0001180662873494,original 13
-hr,classification,RandForest,0.0032952693418731,original 13
-hr,regression,GradientBoosting,0.0050153312625375,original 13
-hr,regression,LightGBM,0.0092591878463802,original 13
-bg,classification,LogReg,0.0,original 13
-bg,classification,RandForest,0.0,original 13
-bg,regression,GradientBoosting,0.0,original 13
-bg,regression,LightGBM,0.0,original 13
-lv,classification,LogReg,0.0,original 13
-lv,classification,RandForest,0.0,original 13
-lt,regression,LightGBM,0.0003539944675732,original 13
-lv,regression,GradientBoosting,0.0,original 13
-si,classification,LogReg,0.0,original 13
-si,classification,RandForest,0.0,original 13
-si,regression,GradientBoosting,0.0,original 13
-si,regression,LightGBM,0.0,original 13
-rs,classification,LogReg,5.422712298210064e-05,original 13
-rs,classification,RandForest,0.0007180146064912,original 13
-rs,regression,GradientBoosting,0.0082438113810167,original 13
-rs,regression,LightGBM,0.0097736968927854,original 13
-sk,classification,LogReg,0.0005280528052805,original 13
-sk,classification,RandForest,0.0003300330033003,original 13
-lv,regression,LightGBM,0.0,original 13
-lt,regression,GradientBoosting,0.0018760458506862,original 13
-lt,classification,RandForest,0.0004298326715579,original 13
-lt,classification,LogReg,0.0004181325053945,original 13
-dk,classification,RandForest,0.0007562670304508,original 13
-dk,regression,GradientBoosting,0.0002318938639138,original 13
-dk,regression,LightGBM,0.0035461843114003,original 13
-ie,classification,LogReg,3.870170399650208e-05,original 13
-ie,classification,RandForest,0.0004091257331031,original 13
-ie,regression,GradientBoosting,0.0001372964776368,original 13
-ie,regression,LightGBM,0.0007220070016851,original 13
-nl,classification,LogReg,0.0001532377656945,original 13
-nl,classification,RandForest,0.0155391839993917,original 13
-nl,regression,GradientBoosting,0.0024208875405293,original 13
-nl,regression,LightGBM,0.001659720570606,original 13
-pt,classification,LogReg,7.00143167204903e-05,original 13
-pt,classification,RandForest,0.0005367045744181,original 13
-pt,regression,GradientBoosting,0.0022539945286524,original 13
-pt,regression,LightGBM,0.0051112416393312,original 13
-gr,classification,LogReg,4.313861759250304e-05,original 13
-gr,classification,RandForest,8.23968571035949e-05,original 13
-gr,regression,GradientBoosting,0.0006950078382093,original 13
-gr,regression,LightGBM,0.0001137519645664,original 13
-be,classification,LogReg,1.0121266264706552e-05,original 13
-be,classification,RandForest,0.0011497196184327,original 13
-be,regression,GradientBoosting,0.0008101454763815,original 13
-be,regression,LightGBM,0.0011499475688914,original 13
-sk,regression,GradientBoosting,0.0206081525416985,original 13
-sk,regression,LightGBM,0.0164365326011138,original 13
-cz,classification,LogReg,0.0,added six
-cz,classification,RandForest,0.0,added six
-cz,regression,GradientBoosting,0.0,added six
-cz,regression,LightGBM,0.0,added six
-fr,classification,LogReg,0.00023645885239879927,added six
-fr,classification,RandForest,0.007513092204849706,added six
-fr,regression,GradientBoosting,0.0017848900565577974,added six
-fr,regression,LightGBM,0.0014904194922163994,added six
-at,classification,LogReg,0.0,added six
-at,classification,RandForest,0.0,added six
-at,regression,GradientBoosting,0.0,added six
-at,regression,LightGBM,0.0,added six
-de,classification,LogReg,1.2927714124311152e-05,added six
-de,classification,RandForest,0.00011192309021809677,added six
-de,regression,GradientBoosting,0.0016104673978517559,added six
-de,regression,LightGBM,0.0012508706601094266,added six
-es,classification,LogReg,0.0012565851532250205,added six
-es,classification,RandForest,0.0017480332821094985,added six
-es,regression,GradientBoosting,0.001017891384888392,added six
-es,regression,LightGBM,0.0018340132493156192,added six
-ro,classification,LogReg,0.004507483588192279,added six
-ro,classification,RandForest,0.005813695832925486,added six
-ro,regression,GradientBoosting,0.014528642012725967,added six
-ro,regression,LightGBM,0.014858823851832126,added six
+dk,classification,LogReg,0.000122141612884,first batch (13)
+hr,classification,LogReg,0.0001180662873494,first batch (13)
+hr,classification,RandForest,0.0032952693418731,first batch (13)
+hr,regression,GradientBoosting,0.0050153312625375,first batch (13)
+hr,regression,LightGBM,0.0092591878463802,first batch (13)
+bg,classification,LogReg,0.0,first batch (13)
+bg,classification,RandForest,0.0,first batch (13)
+bg,regression,GradientBoosting,0.0,first batch (13)
+bg,regression,LightGBM,0.0,first batch (13)
+lv,classification,LogReg,0.0,first batch (13)
+lv,classification,RandForest,0.0,first batch (13)
+lt,regression,LightGBM,0.0003539944675732,first batch (13)
+lv,regression,GradientBoosting,0.0,first batch (13)
+si,classification,LogReg,0.0,first batch (13)
+si,classification,RandForest,0.0,first batch (13)
+si,regression,GradientBoosting,0.0,first batch (13)
+si,regression,LightGBM,0.0,first batch (13)
+rs,classification,LogReg,5.422712298210064e-05,first batch (13)
+rs,classification,RandForest,0.0007180146064912,first batch (13)
+rs,regression,GradientBoosting,0.0082438113810167,first batch (13)
+rs,regression,LightGBM,0.0097736968927854,first batch (13)
+sk,classification,LogReg,0.0005280528052805,first batch (13)
+sk,classification,RandForest,0.0003300330033003,first batch (13)
+lv,regression,LightGBM,0.0,first batch (13)
+lt,regression,GradientBoosting,0.0018760458506862,first batch (13)
+lt,classification,RandForest,0.0004298326715579,first batch (13)
+lt,classification,LogReg,0.0004181325053945,first batch (13)
+dk,classification,RandForest,0.0007562670304508,first batch (13)
+dk,regression,GradientBoosting,0.0002318938639138,first batch (13)
+dk,regression,LightGBM,0.0035461843114003,first batch (13)
+ie,classification,LogReg,3.870170399650208e-05,first batch (13)
+ie,classification,RandForest,0.0004091257331031,first batch (13)
+ie,regression,GradientBoosting,0.0001372964776368,first batch (13)
+ie,regression,LightGBM,0.0007220070016851,first batch (13)
+nl,classification,LogReg,0.0001532377656945,first batch (13)
+nl,classification,RandForest,0.0155391839993917,first batch (13)
+nl,regression,GradientBoosting,0.0024208875405293,first batch (13)
+nl,regression,LightGBM,0.001659720570606,first batch (13)
+pt,classification,LogReg,7.00143167204903e-05,first batch (13)
+pt,classification,RandForest,0.0005367045744181,first batch (13)
+pt,regression,GradientBoosting,0.0022539945286524,first batch (13)
+pt,regression,LightGBM,0.0051112416393312,first batch (13)
+gr,classification,LogReg,4.313861759250304e-05,first batch (13)
+gr,classification,RandForest,8.23968571035949e-05,first batch (13)
+gr,regression,GradientBoosting,0.0006950078382093,first batch (13)
+gr,regression,LightGBM,0.0001137519645664,first batch (13)
+be,classification,LogReg,1.0121266264706552e-05,first batch (13)
+be,classification,RandForest,0.0011497196184327,first batch (13)
+be,regression,GradientBoosting,0.0008101454763815,first batch (13)
+be,regression,LightGBM,0.0011499475688914,first batch (13)
+sk,regression,GradientBoosting,0.0206081525416985,first batch (13)
+sk,regression,LightGBM,0.0164365326011138,first batch (13)
+cz,classification,LogReg,0.0,second batch (6)
+cz,classification,RandForest,0.0,second batch (6)
+cz,regression,GradientBoosting,0.0,second batch (6)
+cz,regression,LightGBM,0.0,second batch (6)
+fr,classification,LogReg,0.00023645885239879927,second batch (6)
+fr,classification,RandForest,0.007513092204849706,second batch (6)
+fr,regression,GradientBoosting,0.0017848900565577974,second batch (6)
+fr,regression,LightGBM,0.0014904194922163994,second batch (6)
+at,classification,LogReg,0.0,second batch (6)
+at,classification,RandForest,0.0,second batch (6)
+at,regression,GradientBoosting,0.0,second batch (6)
+at,regression,LightGBM,0.0,second batch (6)
+de,classification,LogReg,1.2927714124311152e-05,second batch (6)
+de,classification,RandForest,0.00011192309021809677,second batch (6)
+de,regression,GradientBoosting,0.0016104673978517559,second batch (6)
+de,regression,LightGBM,0.0012508706601094266,second batch (6)
+es,classification,LogReg,0.0012565851532250205,second batch (6)
+es,classification,RandForest,0.0017480332821094985,second batch (6)
+es,regression,GradientBoosting,0.001017891384888392,second batch (6)
+es,regression,LightGBM,0.0018340132493156192,second batch (6)
+ro,classification,LogReg,0.004507483588192279,second batch (6)
+ro,classification,RandForest,0.005813695832925486,second batch (6)
+ro,regression,GradientBoosting,0.014528642012725967,second batch (6)
+ro,regression,LightGBM,0.014858823851832126,second batch (6)

@@ -15,6 +15,8 @@ import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as pe
+from matplotlib.text import Text
 
 COMP = "results/paper"   # curated, path-free tables committed with the repo
 ERAS = [("pre", "Pre-COVID (2016-2019)"), ("post", "Post-COVID (2022-2026)")]
@@ -150,17 +152,15 @@ def fig1(ref, out):
         plt.Line2D([], [], color=DOWN, lw=2.2, label="weather does not help"),
     ]
     fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False,
-               bbox_to_anchor=(0.5, 0.955), fontsize=9.5)
-    fig.suptitle("Per-country test performance at 0.25° with capacity weighting",
-                 fontsize=12, y=0.995)
-    fig.tight_layout(rect=(0, 0, 1, 0.925))
+               bbox_to_anchor=(0.5, 0.995), fontsize=9.5)
+    fig.tight_layout(rect=(0, 0, 1, 0.955))
     _draw_arrows(fig, pending)
     for ext in ("pdf", "png"):
         fig.savefig(f"{out}/fig_results_percountry.{ext}", dpi=300)
     plt.close(fig)
 
 
-def _label_points(ax, xs, ys, labels, marker_pt=3.6):
+def _label_points(ax, xs, ys, labels, marker_pt=3.6, line=None, crowd_pt=9.0):
     """Non-overlapping point labels, placed a fixed few points from each dot.
 
     Reviewer 1 noted that countries with similar wind dominance and similar
@@ -183,37 +183,92 @@ def _label_points(ax, xs, ys, labels, marker_pt=3.6):
            [(1, 1), (-1, 1), (1, -1), (-1, -1), (0, 1.3), (0, -1.3), (1.4, 0), (-1.4, 0)]
            for dx, dy in [(dx * 6, dy * 5)]]
 
-    def clear(bb, own):
+    line_px = None
+    if line is not None:                          # fitted line, sampled densely
+        lx = np.linspace(line[0][0], line[0][-1], 400)
+        ly = np.interp(lx, line[0], line[1])
+        line_px = ax.transData.transform(np.column_stack([lx, ly]))
+    crowd = crowd_pt * px_per_pt
+    nearest = [min((np.hypot(*(pts[i] - pts[j])) for j in range(len(pts)) if j != i),
+                   default=np.inf) for i in range(len(pts))]
+
+    r_other = r + 7 * px_per_pt                       # extra room around other countries' dots
+
+    def clear(bb, own, avoid_dots=True, avoid_line=True):
         if (bb.x0 < ax_box.x0 or bb.x1 > ax_box.x1 or
                 bb.y0 < ax_box.y0 or bb.y1 > ax_box.y1):
             return False
-        if any(bb.overlaps(b) for b in placed):
+        if any(bb.overlaps(b) for b in placed):      # labels never overlap
             return False
-        for j, (qx, qy) in enumerate(pts):          # keep off every dot
-            cx = min(max(qx, bb.x0), bb.x1); cy = min(max(qy, bb.y0), bb.y1)
-            if (cx - qx) ** 2 + (cy - qy) ** 2 < r * r:
-                return False
+        if avoid_dots:
+            for k, (qx, qy) in enumerate(pts):
+                rad = r if k == own else r_other   # a label must not read as another dot's
+                cx = min(max(qx, bb.x0), bb.x1); cy = min(max(qy, bb.y0), bb.y1)
+                if (cx - qx) ** 2 + (cy - qy) ** 2 < rad * rad:
+                    return False
+        if avoid_line and line_px is not None and np.any(
+                (line_px[:, 0] > bb.x0 - 2) & (line_px[:, 0] < bb.x1 + 2)
+                & (line_px[:, 1] > bb.y0 - 2) & (line_px[:, 1] < bb.y1 + 2)):
+            return False
         return True
 
+    farther = [(dx * 1.7, dy * 1.7) for dx, dy in far]
     placed = []
     for i in np.argsort(-np.asarray(ys)):
-        done = False
-        for ring, leader in ((near, False), (far, True)):
-            for ox, oy in ring:
-                ha = "left" if ox > 0 else "right" if ox < 0 else "center"
-                va = "bottom" if oy > 0 else "top" if oy < 0 else "center"
-                kw = dict(arrowprops=dict(arrowstyle="-", lw=0.6, color="#8B9199",
-                                          shrinkA=0, shrinkB=r / px_per_pt)) if leader else {}
-                t = ax.annotate(labels[i], (xs[i], ys[i]), xytext=(ox, oy),
-                                textcoords="offset points", ha=ha, va=va,
-                                fontsize=7.5, color="#30343B", zorder=4, **kw)
-                bb = t.get_window_extent(rend).expanded(1.06, 1.12)
-                if clear(bb, i):
-                    placed.append(bb); done = True
+        crowded = nearest[i] < crowd
+        rings = ([] if crowded else [(near, False)]) + [(far, True), (farther, True)]
+        if crowded:
+            # Try offsets on the side facing away from the neighbouring dot first,
+            # so the two leader lines of a crowded pair can never cross.
+            j = min((k for k in range(len(pts)) if k != i),
+                    key=lambda k: np.hypot(*(pts[i] - pts[k])))
+            v = pts[i] - pts[j]
+            away = lambda ring: sorted(ring, key=lambda o: -(o[0] * v[0] + o[1] * v[1]))
+            rings = [(away(rg), ld) for rg, ld in rings]
+        # Every label is placed. Rules relax in order only when nothing passes:
+        # first the fitted line may be crossed (the white halo keeps the text
+        # legible), then other dots; labels themselves never overlap.
+        for avoid_line, avoid_dots in ((True, True), (False, True), (False, False)):
+            done = False
+            for ring, leader in rings:
+                for ox, oy in ring:
+                    ha = "left" if ox > 0 else "right" if ox < 0 else "center"
+                    va = "bottom" if oy > 0 else "top" if oy < 0 else "center"
+                    kw = dict(arrowprops=dict(arrowstyle="-", lw=0.6, color="#8B9199",
+                                              shrinkA=0, shrinkB=r / px_per_pt)) if leader else {}
+                    t = ax.annotate(labels[i], (xs[i], ys[i]), xytext=(ox, oy),
+                                    textcoords="offset points", ha=ha, va=va,
+                                    fontsize=7.5, color="#30343B", zorder=4, **kw)
+                    t.set_path_effects([pe.withStroke(linewidth=2.4, foreground="white")])
+                    # Annotation.get_window_extent includes the leader line, which
+                    # always touches the label's own dot; measure the text alone and
+                    # test the leader separately.
+                    t.update_positions(rend)            # resolve the offset-points position
+                    bb = Text.get_window_extent(t, rend).expanded(1.06, 1.12)
+                    ok = clear(bb, i, avoid_dots, avoid_line)
+                    if ok and leader and avoid_dots:
+                        tx, ty = (bb.x0 + bb.x1) / 2, (bb.y0 + bb.y1) / 2
+                        seg = np.column_stack([np.linspace(tx, pts[i][0], 24),
+                                               np.linspace(ty, pts[i][1], 24)])
+                        # ignore the stretch next to the label's own dot, which a
+                        # near-coincident neighbour necessarily shares
+                        seg = seg[np.hypot(*(seg - pts[i]).T) > 2.5 * r]
+                        for k, q in enumerate(pts):
+                            if k != i and np.min(np.hypot(*(seg - q).T)) < r:
+                                ok = False                 # leader would cross another dot
+                        if any(np.any((seg[:, 0] > b.x0) & (seg[:, 0] < b.x1) &
+                                      (seg[:, 1] > b.y0) & (seg[:, 1] < b.y1)) for b in placed):
+                            ok = False                     # or run through another label
+                    if ok:
+                        placed.append(bb); done = True
+                        break
+                    t.remove()
+                if done:
                     break
-                t.remove()
             if done:
                 break
+        else:
+            raise RuntimeError(f"could not place label {labels[i]}")
 
 
 def fig2(ref, D, out):
@@ -231,11 +286,12 @@ def fig2(ref, D, out):
              .merge(D[D.era == "post"], on="code")
              .dropna(subset=["gain", "D", "native_points"]))
         ax.scatter(d.D, d.gain, s=46, color=BOTH, edgecolor="white", lw=0.8, zorder=3)
-        _label_points(ax, d.D.values, d.gain.values,
-                      [c.upper() for c in d.code.values])
         b, a = np.polyfit(d.D, d.gain, 1)
         xs = np.linspace(d.D.min() - 2, d.D.max() + 2, 100)
         ax.plot(xs, a + b * xs, color="#30343B", lw=1.6, zorder=2)
+        _label_points(ax, d.D.values, d.gain.values,
+                      [c.upper() for c in d.code.values], line=(xs, a + b * xs))
+
         z = np.log(d.native_points.values)
         eD = d.D.values - np.polyval(np.polyfit(z, d.D.values, 1), z)
         eg = d.gain.values - np.polyval(np.polyfit(z, d.gain.values, 1), z)
@@ -266,6 +322,7 @@ def fig3(out):
     cap["red"] = 100 * (1 - cap.total_point_hours / cap.H0)
     fig, ax = plt.subplots(figsize=(6.6, 4.4))
     marks = {"pre": "o", "post": "^"}
+    pts = []
     cols = {"pre": "#0F766E", "post": "#2C5F7C"}
     for era, title in ERAS:
         g = (cap[(cap.era == era) & (cap.resolution_deg != 0.25)]
@@ -274,10 +331,17 @@ def fig3(out):
                   red=("red", "first")).reset_index().sort_values("red"))
         ax.plot(g.red, g.drift, marker=marks[era], color=cols[era], lw=1.8,
                 ms=7, label=title)
-        for _, r in g.iterrows():
-            ax.annotate(f"{r.resolution_deg:g}°", (r.red, r.drift),
-                        xytext=(6, 5), textcoords="offset points", fontsize=8.5,
-                        color=cols[era])
+        pts.append(g)
+    # Both eras share the 1 degree point (93.0%, 0.0045), so per-era labels
+    # collide there. Label each resolution once, below its lowest marker.
+    ax.set_ylim(bottom=0)        # drift is a magnitude; also leaves room for the 0.5 label
+    allp = pd.concat(pts, ignore_index=True)
+    for res, g in allp.groupby("resolution_deg"):
+        low = g.loc[g.drift.idxmin()]
+        t = ax.annotate(f"{res:g}°", (low.red, low.drift), xytext=(0, -11),
+                        textcoords="offset points", ha="center", va="top",
+                        fontsize=9, color="#4A4F57")
+        t.set_path_effects([pe.withStroke(linewidth=2.6, foreground="white")])
     ax.set_xlabel("Workload reduction vs 0.25° (%, grid-point hours)")
     ax.set_ylabel("Median predictive drift $d_r$")
     ax.grid(color="#EDF0F2", lw=0.8)
