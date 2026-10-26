@@ -149,6 +149,31 @@ python scripts/compare_era_spatial_resolution.py
 
 Every number and figure in the paper is reproduced by the tables already committed under `results/paper/`, so the claims can be checked without re-running the pipeline — which needs roughly 20 GB of ERA5 and a Copernicus token.
 
+#### What each table in `results/paper/` contains
+
+| File | Contents |
+|---|---|
+| `model_results_all_eras.csv` | Per-country calendar and calendar+weather scores, and their difference, for every era, task, model, resolution and weighting scheme. All other tables derive from this one. |
+| `capacity_weighted_primary_results_table.csv` | Capacity-weighted summary per era and resolution, with gain counts and the wind-dominance correlation. |
+| `resolution_summary_all_eras.csv` | Predictive drift and grid-point-hour workload at each resolution. |
+| `headline_correlations.csv` | Wind dominance against weather-added gain, per model. |
+| `leave_one_country_out_correlations.csv` | That correlation recomputed with each country removed in turn. |
+| `block_bootstrap_correlations.csv` | Percentile intervals for the correlation, from a block bootstrap over held-out ISO weeks. |
+| `country_size_sensitivity_post.csv` | The correlation after controlling for log native grid-cell count. |
+| `native_grid_cells.csv` | Native 0.25-degree cell count per country, the size control used above. |
+| `country_summary_pre.csv`, `country_summary_post.csv` | Per-country wind and solar shares of load. |
+| `figure_statistics.csv` | Wilcoxon results for the pre- and post-period comparison. |
+| `reviewer_decomposition.csv` | Gain refit on demand, on measured renewable generation and on the share, plus an interconnection proxy, per country. |
+| `reviewer_resolution_percountry.csv` | Per-country gain at 0.25 and 1 degree with the absolute difference. |
+| `reviewer_capacity_tests.csv` | Capacity-weighted against uniform aggregation, tested separately per era and primary model. |
+| `reviewer_era_matched_correlation.csv` | Pre- and post-period correlations on the same country set, with an interval for the difference. |
+| `reviewer_drift_drivers.csv` | The country and model behind the maximum drift at each era and resolution. |
+| `reviewer_test_windows.csv` | Start, end, length and calendar months of every country's test partition. |
+| `reviewer_solar_alignment.csv`, `reviewer_solar_alignment_diagnostic.csv` | Effect of the one-hour ERA5 radiation offset. |
+| `gem_capacity_coverage_post.csv` | Per-country, per-year GEM capacity coverage, including unknown-start phases and the DC-to-AC conversion. |
+| `reviewer_unknown_start_all19.csv` | Change in gain when GEM facilities with no reported start year are excluded, all 19 countries. |
+| `unknown_start_model_comparison.csv`, `unknown_start_expansion_model_results.csv` | Supporting runs for the same check. |
+
 ### Figures and peer-review analyses
 
 ```bash
